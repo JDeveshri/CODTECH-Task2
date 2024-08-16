@@ -1,0 +1,121 @@
+ create table students(
+    -> stud_id int primary key,
+    -> f_name char(20),
+    -> l_name char(20),
+    -> DOB date,
+    -> gender char(5),
+    -> email varchar(100),
+    -> phone_num char(20));
+Query OK, 0 rows affected (0.93 sec)
+
+mysql> insert into students values (1,'Treesa','Jolly','2000-10-10','F','jtreesa@gmail.com','1234567789'),(2,'Gayatri','Pullela','2000-05-05','F','gayatri@gmail.com','2234567899'),
+    -> (3,'Arjun','Rao','2001-02-02','M','arjun@gmail.com','5522334488');
+Query OK, 3 rows affected (0.21 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from students;
++---------+---------+---------+------------+--------+-------------------+------------+
+| stud_id | f_name  | l_name  | DOB        | gender | email             | phone_num  |
++---------+---------+---------+------------+--------+-------------------+------------+
+|       1 | Treesa  | Jolly   | 2000-10-10 | F      | jtreesa@gmail.com | 1234567789 |
+|       2 | Gayatri | Pullela | 2000-05-05 | F      | gayatri@gmail.com | 2234567899 |
+|       3 | Arjun   | Rao     | 2001-02-02 | M      | arjun@gmail.com   | 5522334488 |
++---------+---------+---------+------------+--------+-------------------+------------+
+3 rows in set (0.01 sec)
+
+mysql> create table courses(
+    -> course_id int primary key,
+    -> course_name char(30),
+    -> course_description text,
+    -> credits int);
+Query OK, 0 rows affected (0.57 sec)
+
+mysql> insert into courses values (101,'Database System','introduction to DS',4),
+    -> (102,'Data Structure','Fundamental of data structure',3),
+    -> (103,'java','introduction to core java',5);
+Query OK, 3 rows affected (0.10 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from courses;
++-----------+-----------------+-------------------------------+---------+
+| course_id | course_name     | course_description            | credits |
++-----------+-----------------+-------------------------------+---------+
+|       101 | Database System | introduction to DS            |       4 |
+|       102 | Data Structure  | Fundamental of data structure |       3 |
+|       103 | java            | introduction to core java     |       5 |
++-----------+-----------------+-------------------------------+---------+
+3 rows in set (0.00 sec)
+
+mysql> create table enrollments(
+    -> enrollment_id int primary key,
+    -> stud_id int,
+    -> course_id int,
+    -> grade char(5),
+    -> enrollment_date date,
+    -> foreign key (stud_id) references students(stud_id),
+    -> foreign key (course_id) references courses(course_id));
+Query OK, 0 rows affected (0.70 sec)
+insert into enrollments values (1,1,101,'A','2024-08-16'),
+    -> (2,2,102,'AB','2024-08-16'),
+    -> (3,3,103,'C','2024-08-16');
+Query OK, 3 rows affected (0.12 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from enrollments;
++---------------+---------+-----------+-------+-----------------+
+| enrollment_id | stud_id | course_id | grade | enrollment_date |
++---------------+---------+-----------+-------+-----------------+
+|             1 |       1 |       101 | A     | 2024-08-16      |
+|             2 |       2 |       102 | AB    | 2024-08-16      |
+|             3 |       3 |       103 | C     | 2024-08-16      |
++---------------+---------+-----------+-------+-----------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from students;
++---------+---------+---------+------------+--------+-------------------+------------+
+| stud_id | f_name  | l_name  | DOB        | gender | email             | phone_num  |
++---------+---------+---------+------------+--------+-------------------+------------+
+|       1 | Treesa  | Jolly   | 2000-10-10 | F      | jtreesa@gmail.com | 1234567789 |
+|       2 | Gayatri | Pullela | 2000-05-05 | F      | gayatri@gmail.com | 2234567899 |
+|       3 | Arjun   | Rao     | 2001-02-02 | M      | arjun@gmail.com   | 5522334488 |
++---------+---------+---------+------------+--------+-------------------+------------+
+3 rows in set (0.00 sec)
+
+mysql> update students
+    -> set email = 'treesa@gmail.com' where stud_id = 1;
+Query OK, 1 row affected (0.15 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from students;
++---------+---------+---------+------------+--------+-------------------+------------+
+| stud_id | f_name  | l_name  | DOB        | gender | email             | phone_num  |
++---------+---------+---------+------------+--------+-------------------+------------+
+|       1 | Treesa  | Jolly   | 2000-10-10 | F      | treesa@gmail.com  | 1234567789 |
+|       2 | Gayatri | Pullela | 2000-05-05 | F      | gayatri@gmail.com | 2234567899 |
+|       3 | Arjun   | Rao     | 2001-02-02 | M      | arjun@gmail.com   | 5522334488 |
++---------+---------+---------+------------+--------+-------------------+------------+
+3 rows in set (0.00 sec)
+select * from enrollments;
++---------------+---------+-----------+-------+-----------------+
+| enrollment_id | stud_id | course_id | grade | enrollment_date |
++---------------+---------+-----------+-------+-----------------+
+|             1 |       1 |       101 | A     | 2024-08-16      |
+|             2 |       2 |       102 | AB    | 2024-08-16      |
+|             3 |       3 |       103 | C     | 2024-08-16      |
++---------------+---------+-----------+-------+-----------------+
+3 rows in set (0.00 sec)
+mysql> select students.f_name,
+    -> students.l_name,
+    -> courses.course_name,
+    -> enrollments.grade
+    -> from enrollments
+    -> join students on enrollments.stud_id = students.stud_id
+    -> join courses on enrollments.course_id = courses.course_id;
++---------+---------+-----------------+-------+
+| f_name  | l_name  | course_name     | grade |
++---------+---------+-----------------+-------+
+| Treesa  | Jolly   | Database System | A     |
+| Gayatri | Pullela | Data Structure  | AB    |
+| Arjun   | Rao     | java            | C     |
++---------+---------+-----------------+-------+
+3 rows in set (0.00 sec)
